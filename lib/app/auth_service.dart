@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 ValueNotifier<AuthService> authService = ValueNotifier(AuthService());
 
-class AuthService {
+class AuthService extends ChangeNotifier {
 
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
@@ -11,24 +11,35 @@ class AuthService {
 
   Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
 
+  AuthService() {
+    authStateChanges.listen((_) {
+      notifyListeners();
+    });
+  }
+
   Future<UserCredential> signIn({
     required String email,
     required String password,
   }) async {
-    return await firebaseAuth.signInWithEmailAndPassword(
+    final res = await firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
+    notifyListeners();
+    return res;
   }
 
   Future<UserCredential> createAccount({
     required String email,
     required String password,
   }) async {
-    return await firebaseAuth.createUserWithEmailAndPassword(
+    final res = await firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
+    notifyListeners();
+    return res;
   }
 
   Future<void> signOut() async {
     await firebaseAuth.signOut();
+    notifyListeners();
   }
 
   Future<void> resetPassword({
@@ -40,7 +51,11 @@ class AuthService {
   Future<void> updateUsername({
     required String username
   }) async {
-    await currentUser!.updateDisplayName(username);
+    if (currentUser != null){
+      await currentUser!.updateDisplayName(username);
+      await currentUser!.reload();
+      notifyListeners();
+    }
   }
 
   Future<void> deleteAccount({
