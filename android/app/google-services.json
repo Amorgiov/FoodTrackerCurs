@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "425164391148",
+    "project_id": "foodtrackerfirebase-pm0306",
+    "storage_bucket": "foodtrackerfirebase-pm0306.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425164391148:android:daa9ad6ef9bd1f23f6dbc9",
+        "android_client_info": {
+          "package_name": "panov.tech.curs.food_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx5NzKPIfZmia9RkxhmCyA0ICTLyDffBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
