@@ -57,6 +57,7 @@ class DefaultFirebaseOptions {
     appId: '1:425164391148:android:daa9ad6ef9bd1f23f6dbc9',
     messagingSenderId: '425164391148',
     projectId: 'foodtrackerfirebase-pm0306',
+    databaseURL: 'https://foodtrackerfirebase-pm0306-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'foodtrackerfirebase-pm0306.firebasestorage.app',
   );
 

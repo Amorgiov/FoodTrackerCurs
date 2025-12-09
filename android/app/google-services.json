@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "425164391148",
+    "firebase_url": "https://foodtrackerfirebase-pm0306-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "foodtrackerfirebase-pm0306",
     "storage_bucket": "foodtrackerfirebase-pm0306.firebasestorage.app"
   },

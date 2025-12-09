@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'firestore_service.dart';
 
-ValueNotifier<AuthService> authService = ValueNotifier(AuthService());
+final FirestoreService firestoreService = FirestoreService();
 
 class AuthService extends ChangeNotifier {
 
@@ -33,6 +34,9 @@ class AuthService extends ChangeNotifier {
   }) async {
     final res = await firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
+
+    await firestoreService.createUserDocument(res.user!);
+
     notifyListeners();
     return res;
   }
@@ -54,6 +58,9 @@ class AuthService extends ChangeNotifier {
     if (currentUser != null){
       await currentUser!.updateDisplayName(username);
       await currentUser!.reload();
+      
+      await firestoreService.updateUsername(currentUser!.uid, username);
+      
       notifyListeners();
     }
   }
