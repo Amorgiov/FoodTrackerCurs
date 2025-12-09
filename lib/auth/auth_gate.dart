@@ -20,9 +20,16 @@ class AuthGate extends StatelessWidget {
             providers: [
               EmailAuthProvider()
             ],
-            showAuthActionSwitch: false,
+            showAuthActionSwitch: true,
+
             actions: [
               AuthStateChangeAction<SignedIn>((context, state) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const HomeScreen()),
+                );
+              }),
+
+              AuthStateChangeAction<UserCreated>((context, state) {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (_) => const HomeScreen()),
                 );

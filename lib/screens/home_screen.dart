@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../app/auth_service.dart';
 import '../auth/profile_screen.dart';
+import 'categories_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
