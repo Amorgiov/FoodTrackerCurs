@@ -7,7 +7,6 @@ class FirestoreService {
   Future<void> createUserDocument(User user) async {
     final doc = _db.collection('users').doc(user.uid);
 
-    if ((await doc.get()).exists) return;
 
     await doc.set({
       'email': user.email,
