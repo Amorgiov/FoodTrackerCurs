@@ -1,49 +1,98 @@
 import 'package:flutter/material.dart';
+import '../api/meal_api_service.dart';
+import '../api/meal_category.dart';
+import 'meals_screen.dart';
 
-class CategoriesScreen extends StatelessWidget {
+
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
 
-  static const List<Map<String, dynamic>> categories = [
-    {'name': 'Суши', 'icon': Icons.rice_bowl},
-    {'name': 'Бургеры', 'icon': Icons.fastfood},
-    {'name': 'Паста', 'icon': Icons.set_meal},
-    {'name': 'Пицца', 'icon': Icons.local_pizza},
-    {'name': 'Десерты', 'icon': Icons.cake},
-    {'name': 'Напитки', 'icon': Icons.local_drink},
-  ];
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> {
+  final MealApiService _api = MealApiService();
+  late Future<List<MealCategory>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _api.fetchCategories();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3/2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Категории еды'),
       ),
-      itemCount: categories.length,
-      itemBuilder: (context, index) {
-        final cat = categories[index];
-        return GestureDetector(
-          onTap: () {
-          },
-          child: Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+      body: FutureBuilder<List<MealCategory>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Ошибка загрузки: ${snapshot.error}'),
+            );
+          }
+
+          final categories = snapshot.data!;
+
+          return GridView.builder(
+            padding: const EdgeInsets.all(12),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.85,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(cat['icon'] as IconData, size: 48, color: Theme.of(context).colorScheme.primary),
-                const SizedBox(height: 8),
-                Text(cat['name'] as String, style: const TextStyle(fontSize: 16)),
-              ],
-            ),
-          ),
-        );
-      },
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              final category = categories[index];
+
+              return InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => MealsScreen(
+                        category: category.name,
+                      ),
+                    ),
+                  );
+                },
+                child: Card(
+                  elevation: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: Image.network(
+                          category.thumbnail,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          category.name,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
