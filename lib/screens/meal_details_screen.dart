@@ -73,7 +73,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                       ),
                       onPressed: isTried
                       ? null
-                          : () {
+                          : () async {
                       triedMealsStore.markTried(meal.id);
                       setState(() {});
                       },
