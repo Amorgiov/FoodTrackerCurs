@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../api/meal_api_service.dart';
 import '../api/meal_details.dart';
+import '../app/firestore_service.dart';
 import '../app/tried_meals_store.dart';
 
 class MealDetailsScreen extends StatefulWidget {
@@ -19,10 +21,27 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
   final MealApiService _api = MealApiService();
   late Future<MealDetails> _future;
 
+  final _firestore = FirestoreService();
+  final _uid = FirebaseAuth.instance.currentUser!.uid;
+  bool _isFavorite = false;
+
   @override
   void initState() {
     super.initState();
     _future = _api.fetchMealDetails(widget.mealId);
+
+    _future.then((meal) async {
+      _isFavorite = await _firestore.isFavorite(_uid, meal.id);
+
+      await _firestore.addRecentMeal(_uid, {
+        'mealId': meal.id,
+        'name': meal.name,
+        'thumbnail': meal.thumbnail,
+        'viewedAt': DateTime.now().toIso8601String(),
+      });
+
+      setState(() {});
+    });
   }
 
   @override
@@ -77,6 +96,27 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                       triedMealsStore.markTried(meal.id);
                       setState(() {});
                       },
+                      ),
+
+                      ElevatedButton.icon(
+                        icon: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
+                        label: Text(
+                          _isFavorite ? 'В избранном' : 'Добавить в избранное',
+                        ),
+                        onPressed: () async {
+                          final meal = snapshot.data!;
+                          if (_isFavorite) {
+                            await _firestore.removeFavorite(_uid, meal.id);
+                          } else {
+                            await _firestore.addFavorite(_uid, {
+                              'mealId': meal.id,
+                              'name': meal.name,
+                              'category': meal.category,
+                              'thumbnail': meal.thumbnail,
+                            });
+                          }
+                          setState(() => _isFavorite = !_isFavorite);
+                        },
                       ),
                     ],
                   ),

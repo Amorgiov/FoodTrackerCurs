@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import '../app/auth_service.dart';
 import '../auth/profile_screen.dart';
 import 'categories_screen.dart';
+import 'daily_meal_screen.dart';
 import 'docs_screen.dart';
+import 'favorites_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -37,6 +39,24 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const DocsScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => FavoritesScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.today),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const DailyMealScreen()),
               );
             },
           ),
