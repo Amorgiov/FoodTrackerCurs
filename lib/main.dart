@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
       title: 'Food Tracker',
       theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.green),
       home: const AuthGate(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
